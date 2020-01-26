@@ -14,7 +14,7 @@ public class App {
   public static void main(String[] args) {
     out.println("Start......");
     // File or directory
-    String path = "src/main/resources/getLocation";
+    String path = "src/main/resources/features";
     File file = new File(path);
 
     format(file);
@@ -26,7 +26,7 @@ public class App {
       return;
     }
     if (file.isFile() && file.getName().endsWith(".feature")) {
-      out.println("Format feature file: " + file.getName());
+      System.out.println("Format feature file: " + file.getName());
       FeatureJsonFormater.formatAndWrite(file);
     } else if (file.isDirectory()) {
       File[] files = file.listFiles();

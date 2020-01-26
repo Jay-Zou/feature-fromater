@@ -71,7 +71,14 @@ public class FeatureJsonFormater {
       List<MatchResult> matchResults = RegexHelper.extractParams(RegexHelper.JSON_PARAMS_REGEX, json);
 
       out.println(json);
-      JsonElement je = jsonParser.parse(json);
+      JsonElement je;
+      try {
+        je = jsonParser.parse(json);
+      } catch (Exception e) {
+        // If it isn't a json string
+        e.printStackTrace();
+        return;
+      }
       String prettyJsonString = gson.toJson(je);
 
       String[] prettyLines = prettyJsonString.split("\\n");
