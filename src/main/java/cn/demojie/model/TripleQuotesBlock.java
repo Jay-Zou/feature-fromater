@@ -4,15 +4,12 @@ import java.util.List;
 
 public class TripleQuotesBlock {
 
-  /**
-   * Do not contains the TripleQuotes line
-   */
+  /** Do not contains the TripleQuotes line */
   int startLine;
 
-  /**
-   * Do contains the TripleQuotes line
-   */
+  /** Do contains the TripleQuotes line */
   int endLine;
+
   List<String> lines;
 
   public int getStartLine() {

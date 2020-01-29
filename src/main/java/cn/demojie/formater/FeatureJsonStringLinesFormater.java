@@ -1,7 +1,11 @@
-package cn.demojie;
+package cn.demojie.formater;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import cn.demojie.Main;
+import cn.demojie.helper.CommonHelper;
+import cn.demojie.helper.FileHelper;
+import cn.demojie.helper.RegexHelper;
 import cn.demojie.model.TripleQuotesBlock;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.MatchResult;
 
-public class FeatureJsonFormater {
+public class FeatureJsonStringLinesFormater {
 
   public static PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out, UTF_8));
   public static PrintWriter err = new PrintWriter(new OutputStreamWriter(System.err, UTF_8));
@@ -68,7 +72,8 @@ public class FeatureJsonFormater {
       lines.forEach(stringBuilder::append);
       String json = stringBuilder.toString();
       // TODO Extract all params and put them back after format
-      List<MatchResult> matchResults = RegexHelper.extractParams(RegexHelper.JSON_PARAMS_REGEX, json);
+      List<MatchResult> matchResults =
+          RegexHelper.extractParams(RegexHelper.JSON_PARAMS_REGEX, json);
 
       out.println(json);
       JsonElement je;
@@ -85,7 +90,7 @@ public class FeatureJsonFormater {
 
       // Convert to List and add space prefix and add triple quotes
       List<String> prettyLineList = new ArrayList<>();
-      String spacePrefix = generateSpace(startSpaceCount);
+      String spacePrefix = CommonHelper.generateSpace(startSpaceCount);
       prettyLineList.add(spacePrefix + TRIPLE_QUOTES);
       for (String prettyLine : prettyLines) {
         prettyLineList.add(spacePrefix + prettyLine);
@@ -94,15 +99,6 @@ public class FeatureJsonFormater {
 
       jsonBlock.setLines(prettyLineList);
     }
-  }
-
-  public static String generateSpace(int startSpaceCount) {
-    char space = ' ';
-    StringBuilder stringBuilder = new StringBuilder();
-    for (int i = 0; i < startSpaceCount; i++) {
-      stringBuilder.append(space);
-    }
-    return stringBuilder.toString();
   }
 
   private static List<TripleQuotesBlock> filterJsonTripleQuotesBlock(
@@ -145,7 +141,7 @@ public class FeatureJsonFormater {
 
   public static List<String> getTestJsonFromResources(String fileName) {
     try {
-      URI uri = App.class.getClassLoader().getResource(fileName).toURI();
+      URI uri = Main.class.getClassLoader().getResource(fileName).toURI();
       return Files.readAllLines(Paths.get(uri));
     } catch (Exception e) {
       e.printStackTrace();
