@@ -1,6 +1,6 @@
 package cn.demojie.helper;
 
-import cn.demojie.model.JsonBlock;
+import cn.demojie.model.JsonLikeBlock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -15,25 +15,33 @@ public class RegexHelper {
   public static final String JSON_PARAMS_REGEX = "(\"?<.*?>\"?)";
   public static final String JSON_PARAMS_REGEX_REPLACEMENT = "\"TEMP_REPLACE\"";
 
-  public static List<MatchResult> extractParams(String regx, String data) {
-    Pattern pattern = Pattern.compile(regx);
+  public static List<JsonLikeBlock> extractJsonLikeBlock(String data) {
+    List<JsonLikeBlock> jsonLikeBlocks = new ArrayList<>();
+
+    // Extract json block by regex
+    Pattern pattern = Pattern.compile(JSON_TRIPLE_QUOTES_REGEX);
     Matcher matcher = pattern.matcher(data);
-    List<MatchResult> matchResults = new ArrayList<>();
     while (matcher.find()) {
-      matchResults.add(matcher.toMatchResult());
+      MatchResult matchResult = matcher.toMatchResult();
+      JsonLikeBlock jsonLikeBlock =
+          new JsonLikeBlock(
+              matchResult.start(),
+              matchResult.end(),
+              matchResult.group(JSON_TRIPLE_QUOTES_REGEX_GROUP_INDEX));
+      jsonLikeBlocks.add(jsonLikeBlock);
     }
-    return matchResults;
+    return jsonLikeBlocks;
   }
 
   /**
    * Extract <xxx> or "<xxx>" and replace them to "TEMP_REPLACE"
    *
-   * @param jsonBlock
+   * @param jsonLikeBlock
    */
-  public static void extractAndReplaceParams(JsonBlock jsonBlock) {
+  public static void extractAndReplaceParams(JsonLikeBlock jsonLikeBlock) {
 
     Pattern pattern = Pattern.compile(RegexHelper.JSON_PARAMS_REGEX);
-    Matcher matcher = pattern.matcher(jsonBlock.getDataWithoutQuotes());
+    Matcher matcher = pattern.matcher(jsonLikeBlock.getDataWithoutQuotes());
     StringBuffer replaced = new StringBuffer();
 
     List<String> params = new ArrayList<>();
@@ -45,21 +53,21 @@ public class RegexHelper {
       return;
     }
     matcher.appendTail(replaced);
-    jsonBlock.setDataWithoutQuotes(replaced.toString());
-    jsonBlock.setParams(params);
+    jsonLikeBlock.setDataWithoutQuotes(replaced.toString());
+    jsonLikeBlock.setParams(params);
   }
 
   /**
    * Replace all "TEMP_REPLACE" with params extracted from previous steps
    *
-   * @param jsonBlock
+   * @param jsonLikeBlock
    */
-  public static void restoreParams(JsonBlock jsonBlock) {
-    List<String> params = jsonBlock.getParams();
+  public static void restoreParams(JsonLikeBlock jsonLikeBlock) {
+    List<String> params = jsonLikeBlock.getParams();
     if (null == params || params.isEmpty()) {
       return;
     }
-    String dataWithoutQuotes = jsonBlock.getDataWithoutQuotes();
+    String dataWithoutQuotes = jsonLikeBlock.getDataWithoutQuotes();
 
     StringBuilder stringBuilder = new StringBuilder(dataWithoutQuotes);
     int index;
@@ -67,24 +75,6 @@ public class RegexHelper {
       stringBuilder.replace(
           index, JSON_PARAMS_REGEX_REPLACEMENT.length() + index, params.remove(0));
     }
-    jsonBlock.setDataWithoutQuotes(stringBuilder.toString());
-  }
-
-  public static List<JsonBlock> extractJsonBlock(String data) {
-    List<JsonBlock> jsonBlocks = new ArrayList<>();
-
-    // Extract json block by regex
-    Pattern pattern = Pattern.compile(JSON_TRIPLE_QUOTES_REGEX);
-    Matcher matcher = pattern.matcher(data);
-    while (matcher.find()) {
-      MatchResult matchResult = matcher.toMatchResult();
-      JsonBlock jsonBlock =
-          new JsonBlock(
-              matchResult.start(),
-              matchResult.end(),
-              matchResult.group(JSON_TRIPLE_QUOTES_REGEX_GROUP_INDEX));
-      jsonBlocks.add(jsonBlock);
-    }
-    return jsonBlocks;
+    jsonLikeBlock.setDataWithoutQuotes(stringBuilder.toString());
   }
 }

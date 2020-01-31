@@ -1,6 +1,5 @@
 package cn.demojie.helper;
 
-import com.sun.istack.internal.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +15,7 @@ public class FileHelper {
    * @param file just support a file
    * @return contents of the file, or empty string if occur exception
    */
-  public static String getFileContent(@NotNull File file) {
+  public static String getFileContent(File file) {
     byte[] bytes = {};
     try {
       bytes = Files.readAllBytes(file.toPath());

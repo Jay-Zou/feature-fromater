@@ -9,7 +9,7 @@ public class CommonHelper {
   /**
    * Generate space string
    *
-   * @param spaceCount
+   * @param spaceCount the count used for generating the space
    * @return spaceStr
    */
   public static String generateSpace(int spaceCount) {
@@ -21,10 +21,24 @@ public class CommonHelper {
     return stringBuilder.toString();
   }
 
+  /**
+   * ReplaceAll method for StringBuilder
+   *
+   * @param stringBuilder
+   * @param find
+   * @param replacement
+   */
   public static void replaceAll(StringBuilder stringBuilder, String find, String replacement) {
     replaceAll(stringBuilder, find, (index) -> replacement);
   }
 
+  /**
+   * ReplaceAll method for StringBuilder. Can get the index when replace
+   *
+   * @param stringBuilder
+   * @param find
+   * @param function
+   */
   public static void replaceAll(
       StringBuilder stringBuilder, String find, Function<Integer, String> function) {
     List<Integer> indexToReplace = new ArrayList<>();

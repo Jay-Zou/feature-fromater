@@ -1,20 +1,19 @@
 package cn.demojie;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
-public class MainTest
-{
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
-    }
+public class MainTest {
+  @Test
+  public void mainFileTest() {
+    String file = "src/test/resources/features/json-format-test.feature";
+    String[] args = {file};
+    Main.main(args);
+  }
+
+  @Test
+  public void mainDirectoryTest() {
+    String file = "src/test/resources/features/";
+    String[] args = {file};
+    Main.main(args);
+  }
 }

@@ -6,7 +6,7 @@ import cn.demojie.helper.CommonHelper;
 import cn.demojie.helper.FileHelper;
 import cn.demojie.helper.JsonHelper;
 import cn.demojie.helper.RegexHelper;
-import cn.demojie.model.JsonBlock;
+import cn.demojie.model.JsonLikeBlock;
 import com.google.common.base.Strings;
 import java.io.File;
 import java.io.IOException;
@@ -45,15 +45,15 @@ public class FeatureJsonStringsFormater {
     String fileContent = FileHelper.getFileContent(fromFile);
 
     // Extract the string block(""") contents and convert to json and format them
-    List<JsonBlock> jsonBlocks = RegexHelper.extractJsonBlock(fileContent);
+    List<JsonLikeBlock> jsonLikeBlocks = RegexHelper.extractJsonLikeBlock(fileContent);
 
     // Filter json block from TripleQuotesBlock
 
     // Format them, notice that the parametric string
-    processJsonFormat(jsonBlocks);
+    processJsonFormat(jsonLikeBlocks);
 
     // merge them into origin data, from end to start
-    fileContent = mergeBack(fileContent, jsonBlocks);
+    fileContent = mergeBack(fileContent, jsonLikeBlocks);
     // rewrite them to the file
     // rewrite them to the file
 
@@ -64,43 +64,43 @@ public class FeatureJsonStringsFormater {
     }
   }
 
-  private static String mergeBack(String fileContent, List<JsonBlock> jsonBlocks) {
+  private static String mergeBack(String fileContent, List<JsonLikeBlock> jsonLikeBlocks) {
     StringBuilder stringBuilder = new StringBuilder(fileContent);
     // Replace from back to front
-    for (int i = jsonBlocks.size() - 1; i >= 0; i--) {
-      JsonBlock jsonBlock = jsonBlocks.get(i);
-      if (!jsonBlock.isValid()) {
+    for (int i = jsonLikeBlocks.size() - 1; i >= 0; i--) {
+      JsonLikeBlock jsonLikeBlock = jsonLikeBlocks.get(i);
+      if (!jsonLikeBlock.isValid()) {
         continue;
       }
-      int startIndex = jsonBlock.getStartIndex();
-      int endIndex = jsonBlock.getEndIndex();
-      String dataWithoutQuotes = jsonBlock.getDataWithoutQuotes();
+      int startIndex = jsonLikeBlock.getStartIndex();
+      int endIndex = jsonLikeBlock.getEndIndex();
+      String dataWithoutQuotes = jsonLikeBlock.getDataWithoutQuotes();
       // Replace
       stringBuilder.replace(startIndex, endIndex, dataWithoutQuotes);
     }
     return stringBuilder.toString();
   }
 
-  private static void processJsonFormat(List<JsonBlock> jsonBlocks) {
-    for (JsonBlock jsonBlock : jsonBlocks) {
-      RegexHelper.extractAndReplaceParams(jsonBlock);
-      String formatted = JsonHelper.format(jsonBlock.getDataWithoutQuotes());
+  private static void processJsonFormat(List<JsonLikeBlock> jsonLikeBlocks) {
+    for (JsonLikeBlock jsonLikeBlock : jsonLikeBlocks) {
+      RegexHelper.extractAndReplaceParams(jsonLikeBlock);
+      String formatted = JsonHelper.format(jsonLikeBlock.getDataWithoutQuotes());
       if (!Strings.isNullOrEmpty(formatted)) {
-        jsonBlock.setDataWithoutQuotes(formatted);
-        jsonBlock.setValid(true);
+        jsonLikeBlock.setDataWithoutQuotes(formatted);
+        jsonLikeBlock.setValid(true);
       }
-      RegexHelper.restoreParams(jsonBlock);
+      RegexHelper.restoreParams(jsonLikeBlock);
       // align or indent
-      indentJson(jsonBlock);
+      indentJson(jsonLikeBlock);
     }
   }
 
-  private static void indentJson(JsonBlock jsonBlock) {
-    if (!jsonBlock.isValid()) {
+  private static void indentJson(JsonLikeBlock jsonLikeBlock) {
+    if (!jsonLikeBlock.isValid()) {
       return;
     }
     /** TODO : Notice: 1. If """ isn't align with json 2. If the line before """ is blank line */
-    String dataWithoutQuotes = jsonBlock.getDataWithoutQuotes();
+    String dataWithoutQuotes = jsonLikeBlock.getDataWithoutQuotes();
     StringBuilder stringBuilder = new StringBuilder(dataWithoutQuotes);
     String spaceStr = CommonHelper.generateSpace(START_SPACE_COUNT);
     stringBuilder
@@ -109,6 +109,6 @@ public class FeatureJsonStringsFormater {
         .append(NEW_LINE)
         .append(TRIPLE_QUOTES);
     CommonHelper.replaceAll(stringBuilder, NEW_LINE, NEW_LINE + spaceStr);
-    jsonBlock.setDataWithoutQuotes(stringBuilder.toString());
+    jsonLikeBlock.setDataWithoutQuotes(stringBuilder.toString());
   }
 }

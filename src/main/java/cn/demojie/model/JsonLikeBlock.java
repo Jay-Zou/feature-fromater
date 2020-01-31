@@ -2,11 +2,11 @@ package cn.demojie.model;
 
 import java.util.List;
 
-public class JsonBlock {
+public class JsonLikeBlock {
 
-  public JsonBlock() {}
+  public JsonLikeBlock() {}
 
-  public JsonBlock(int startIndex, int endIndex, String dataWithoutQuotes) {
+  public JsonLikeBlock(int startIndex, int endIndex, String dataWithoutQuotes) {
     this.startIndex = startIndex;
     this.endIndex = endIndex;
     this.dataWithoutQuotes = dataWithoutQuotes;

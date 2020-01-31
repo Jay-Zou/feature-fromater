@@ -1,30 +1,26 @@
-Feature: Multiple site support
-  Only blog owners can post to a blog, except administrators,
-  who can post to all blogs.
+Feature: Test json format
 
-  Background:
-    Given a global administrator named "Greg"
+  Scenario: scenario1
     And test json:
     """
 
       {"name":"jay", "age": 123}
     """
 
-  Scenario: Dr. Bill posts to his own blog
+  Scenario: scenario2
     And test json:
     """
       {"name":"jay", "age": 123}
     """
 
-  Scenario: Dr. Bill tries to post to somebody else's blog, and fails
-    And test json:
+  Scenario: scenario3
+    And test not json:
     """
       This is not json
     """
 
-
-  Scenario Outline: eating
-    And test json:
+  Scenario Outline: scenario4
+    And test json with params and quotes:
     """
      {
       "sites": [
@@ -42,11 +38,11 @@ Feature: Multiple site support
 
     Examples:
       | name1   | url1           | name2  | url2           |
-      | cainiao | www.runoob.com | google | www.google.com |
+      | cainiao | www.github.com | google | www.google.com |
 
 
-  Scenario Outline: eating2
-    And test json:
+  Scenario Outline: scenario5
+    And test json with params and without quotes:
     """
      {
       "sites": [
@@ -64,4 +60,4 @@ Feature: Multiple site support
 
     Examples:
       | name1     | url1             | name2    | url2             |
-      | "cainiao" | "www.runoob.com" | "google" | "www.google.com" |
+      | "cainiao" | "www.github.com" | "google" | "www.google.com" |
