@@ -26,4 +26,7 @@ Just format the json-like contents between the `triple quotes`->`"""`
       | cainiao | www.github.com | google | www.google.com |
 ```
 
-
+### Usage:
+```shell script
+java -jar feature-fromater-xxx-all-deps.jar [file or directory]
+```
