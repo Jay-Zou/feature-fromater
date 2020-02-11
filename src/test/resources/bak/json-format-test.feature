@@ -1,26 +1,32 @@
 Feature: Test json format
 
-  Scenario: scenario1
-    And test json:
+  Scenario: Json before bank line
+    And test:
     """
 
       {"name":"jay", "age": 123}
     """
 
-  Scenario: scenario2
-    And test json:
+  Scenario: Normal json
+    And test:
     """
       {"name":"jay", "age": 123}
     """
 
-  Scenario: scenario3
-    And test not json:
+  Scenario: Bad json
+    And test:
+    """
+      {"name":"jay" "age": 123}
+    """
+
+  Scenario: Not json
+    And test:
     """
       This is not json
     """
 
-  Scenario Outline: scenario4
-    And test json with params and quotes:
+  Scenario Outline: Json with params which not include quotes
+    And test:
     """
      {
       "sites": [
@@ -41,8 +47,8 @@ Feature: Test json format
       | cainiao | www.github.com | google | www.google.com |
 
 
-  Scenario Outline: scenario5
-    And test json with params and without quotes:
+  Scenario Outline: Json with params which include quotes
+    And test:
     """
      {
       "sites": [

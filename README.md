@@ -1,4 +1,4 @@
-### A formater for the cucumber's feature file's json-like block
+### A formatter for the cucumber's feature file's json-like block
 
 Just format the json-like contents between the `triple quotes`->`"""`
 

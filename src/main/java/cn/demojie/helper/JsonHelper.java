@@ -10,14 +10,27 @@ public class JsonHelper {
   public static JsonParser jsonParser = new JsonParser();
 
   public static String format(String data) {
+    if (!isJson(data)) {
+      return "";
+    }
     JsonElement jsonElement;
     try {
       jsonElement = jsonParser.parse(data);
     } catch (Exception e) {
-      // If it isn't a json string
-      //      e.printStackTrace();
+      // If it isn't a json string, or it's invalid
+      // TODO Can report the line number
+      LogHelper.error("Format json occur exception: " + data);
       return "";
     }
     return gson.toJson(jsonElement);
+  }
+
+  public static boolean isJson(String data) {
+    String trimData = data.trim();
+    if (!trimData.startsWith("{") || !trimData.endsWith("}")) {
+      LogHelper.warn("Skip no json data: " + data);
+      return false;
+    }
+    return true;
   }
 }

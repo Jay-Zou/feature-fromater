@@ -1,4 +1,4 @@
-package cn.demojie.formater;
+package cn.demojie.formatter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.List;
 
-public class FeatureJsonStringsFormater {
+public class FeatureJsonStringsFormatter {
 
   public static PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out, UTF_8));
   public static PrintWriter err = new PrintWriter(new OutputStreamWriter(System.err, UTF_8));
